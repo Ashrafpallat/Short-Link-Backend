@@ -42,3 +42,26 @@ export const getUserUrls = async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   };
+
+  export const redirectToOriginalUrl = async (req, res) => {
+    try {
+      const { shortUrl } = req.params;
+  
+      // Find the original URL based on the shortUrl
+      const urlEntry = await Url.findOne({ shortUrl });
+  
+      if (!urlEntry) {
+        return res.status(404).json({ message: "URL not found" });
+      }
+  
+      // Increment the click count
+      urlEntry.clicks += 1;
+      await urlEntry.save();
+  
+      // Redirect to the original URL
+      return res.redirect(urlEntry.originalUrl);
+    } catch (error) {
+      console.error("Error redirecting URL:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };

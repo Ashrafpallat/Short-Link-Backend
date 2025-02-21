@@ -22,6 +22,8 @@ app.use(
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/url", urlRoutes);
+// Handle short URL redirection globally
+app.use("/", urlRoutes); // <-- Add this to handle direct short URL access
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
