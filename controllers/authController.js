@@ -40,14 +40,18 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+    console.log('userid',user._id);
+    
     const token = generateToken(user._id); 
+    console.log('token',token);
+    
     res.cookie("token", token, {
         httpOnly: true, 
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-    res.status(200).json({ message: "Login successful", token, userId: user._id });
+    res.status(200).json({ message: "Login successful", token, user });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }
