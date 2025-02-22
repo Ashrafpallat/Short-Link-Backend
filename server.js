@@ -11,10 +11,10 @@ connectDB();
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser()); // Enable reading cookies
+app.use(cookieParser()); 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -22,8 +22,7 @@ app.use(
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/url", urlRoutes);
-// Handle short URL redirection globally
-app.use("/", urlRoutes); // <-- Add this to handle direct short URL access
+app.use("/", urlRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

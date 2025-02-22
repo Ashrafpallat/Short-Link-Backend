@@ -1,20 +1,17 @@
 import Url from "../models/urlModel.js";
-import { nanoid } from "nanoid"; // To generate unique short URLs
+import { nanoid } from "nanoid"; 
 
-// Controller to create a short URL
 export const createShortUrl = async (req, res) => {
   try {
     const { originalUrl } = req.body;
-    const userId = req.userId; // Extracted from JWT middleware
+    const userId = req.userId; 
 
     if (!originalUrl) {
       return res.status(400).json({ message: "Original URL is required" });
     }
 
-    // Generate a short URL using nanoid
     const shortUrl = nanoid(7); // 7-character unique ID
 
-    // Save in database
     const newUrl = await Url.create({ userId, originalUrl, shortUrl });
 
     res.status(201).json({
@@ -25,12 +22,10 @@ export const createShortUrl = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// Controller to get all short URLs of a specific user
 export const getUserUrls = async (req, res) => {
     try {
-      const userId = req.userId; // Extracted from JWT middleware
+      const userId = req.userId; 
   
-      // Find all URLs created by the user
       const userUrls = await Url.find({ userId });
   
       if (!userUrls.length) {
@@ -47,18 +42,15 @@ export const getUserUrls = async (req, res) => {
     try {
       const { shortUrl } = req.params;
   
-      // Find the original URL based on the shortUrl
       const urlEntry = await Url.findOne({ shortUrl });
   
       if (!urlEntry) {
         return res.status(404).json({ message: "URL not found" });
       }
   
-      // Increment the click count
       urlEntry.clicks += 1;
       await urlEntry.save();
   
-      // Redirect to the original URL
       return res.redirect(urlEntry.originalUrl);
     } catch (error) {
       console.error("Error redirecting URL:", error);
