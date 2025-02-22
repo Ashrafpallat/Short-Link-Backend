@@ -5,6 +5,8 @@ dotenv.config();
 
 const jwtAuth = (req, res, next) => {
   try {
+    console.log('req.coockies',req.cookies);
+    
     const token = req.cookies.token;
     
     if (!token) {
